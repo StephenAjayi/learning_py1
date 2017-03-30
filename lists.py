@@ -22,3 +22,9 @@ wumpus_r_us_list.remove('Wumpus B Gone')
 shopping_lists = [supermarket_list, wumpus_r_us_list]
 
 print shopping_lists
+
+first_three = supermarket_list[:3]
+last_three = supermarket_list[1:]
+
+print first_three
+print last_three
