@@ -56,16 +56,53 @@ def print_location(player_location):
     if wumpus_location in caves[player_location]:
         print "I smell a wumpus!"
 
-def get_next_location():
-    """Get the players next location"""
-    print "Which cave next?"
-    player_input = raw_input(">")
+def ask_for_cave():
+    """Ask the player to choose a cave from
+     their current_location"""
+    player_input = raw_input("Which cave next?")
     if (not player_input.isdigit() or int(player_input) not in caves[player_location]):
         print player_input + "?"
         print "That's not a direction that I can see!"
         return None
     else:
         return int(player_input)
+
+def get_action():
+    """Find out what the player wants to do next."""
+    print "What do you do next?"
+    print " m) move"
+    print " a) Fire an arrow"
+    action = raw_input(">")
+    if action == "m" or action == "a":
+        return action
+    else:
+        print action + "?"
+        print "That's not an action I know about"
+        return None
+
+def do_movement():
+    print "Moving..."
+    new_location = ask_for_cave()
+    if new_location == None:
+        return player_location
+    else:
+        return new_location
+
+def do_shooting():
+    print "Firing"
+    shoot_at = ask_for_cave()
+    if shoot_at is None:
+        return False
+
+    if shoot_at == wumpus_location:
+        print "Twang ...Aargh! You shot the wumpus!"
+        print "Well done, mighty wumpus hunter!"
+    else:
+        print "Twang... clatter, clatter!"
+        print "You wasted your arrow!"
+        print "Empty handed, you begin the"
+        print "long trek back to your village..."
+    return True
 
 cave_numbers = range(0,20)
 unvisited_caves = range(0,20)
@@ -84,11 +121,20 @@ player_location = choice(cave_numbers)
 while wumpus_location == player_location:
     player_location = choice(cave_numbers)
 
-while True:
+while 1:
     print_location(player_location)
-    new_location = get_next_location()
-    if new_location != None:
-        player_location = new_location
+
+    action = get_action()
+    if action is None:
+        continue
+
+    if action == "m":
+        player_location = do_movement()
         if player_location == wumpus_location:
             print "Aargh! You got eaten by a wumpus!"
+            break
+
+    if action == "a":
+        game_over = do_shooting()
+        if game_over:
             break
